@@ -74,6 +74,13 @@ Listen 8080
 
 ```
 ## Rails application with different base URI - Apache 2.2, Passenger 3.0
+
+This requirese also soft link:
+```
+/var/www/app/public/uri/path -> /var/www/app/public
+```
+
+Apache config:
 ```
 Listen 8080
 <VirtualHost *:8080>
@@ -106,3 +113,50 @@ Listen 8080
 </VirtualHost>
 
 ```
+
+## Rails multiple apps - Apache 2.4, Passenger 3.0
+```
+Listen 8080
+<VirtualHost *:8080>
+        ServerAdmin webmaster@localhost
+        ServerName server
+        #DocumentRoot /var/www/rails-app/public
+        SetEnvIf Request_URI "/assets" resource
+
+        #<Directory /var/www/rails-app/public>
+        #        Options +FollowSymLinks -MultiViews
+        #        AllowOverride all
+        #        Require all granted
+        #</Directory>
+
+        ErrorLog logs/rails-app-8080-error.log
+        CustomLog logs/rails-app-8080-access.log combined_session env=!resource
+        CustomLog logs/rails-app-8080-assets.log combined
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel info
+        PassengerLogLevel 3
+        PassengerMaxPoolSize 15
+        PassengerMinInstances 6
+        PassengerPoolIdleTime 10
+        PassengerDefaultUser apache
+        PassengerDefaultGroup apache
+        PassengerAppEnv development
+
+        <Location /playground/app1>
+            PassengerBaseURI /playground/app1
+            PassengerAppRoot /var/www/app1
+        </Location>
+
+        <Location /playground/app2>
+            PassengerBaseURI /playground/app2
+            PassengerAppRoot /var/www/app2
+        </Location>
+
+        <Location /app3>
+            PassengerBaseURI /app3
+            PassengerAppRoot /var/www/app3
+        </Location>
+```
+
