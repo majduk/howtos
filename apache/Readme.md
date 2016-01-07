@@ -1,8 +1,6 @@
-##Apache Configuration examples
+# Apache Configuration examples
 
-
-
-# Adding query string param
+## Adding query string param
 ```
     #temp - quick fix
     RewriteCond %{REQUEST_URI} /uri/path
@@ -13,7 +11,7 @@
 ```
 
 
-# Reading part of a header into ENV
+## Reading part of a header into server environment
 ```
 
         RewriteEngine On
@@ -36,4 +34,75 @@
         </Directory>
 
     
+```
+## Rails, partly served from static - Apache 2.2, Passenger 3.0
+
+`http://server/any_path` goes to rails
+`http://server/static/resources/file` is taken from /static/resources dir, provided that the file exists. Otherwise it is sent to Rails.
+
+
+```
+Listen 8080
+<VirtualHost *:8080>
+        ServerAdmin webmaster@localhost
+        ServerName oapi.play.pl
+        DocumentRoot /var/www/app/public
+
+        <Directory /static/resources>
+                Options FollowSymLinks -MultiViews
+                AllowOverride all
+        </Directory>
+
+        <Directory /var/www/app/public>
+                Options FollowSymLinks -MultiViews
+                AllowOverride all
+        </Directory>
+
+        ErrorLog logs/app-8080-error.log
+        CustomLog logs/app-8080-access.log combined
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel info
+        PassengerLogLevel 3
+        PassengerMaxPoolSize 40
+        PassengerMinInstances 6
+        PassengerPoolIdleTime 10
+        PassengerDefaultUser apache
+        PassengerDefaultGroup apache
+</VirtualHost>
+
+```
+## Rails application with different base URI - Apache 2.2, Passenger 3.0
+```
+Listen 8080
+<VirtualHost *:8080>
+        ServerAdmin webmaster@localhost
+        ServerName server
+        SetEnvIf Request_URI "/assets" resource
+
+
+
+        RackBaseURI /uri/path
+        DocumentRoot /var/www/app/public
+        <Directory /var/www/app/public>
+                Options FollowSymLinks -MultiViews
+                AllowOverride all
+        </Directory>
+
+        ErrorLog logs/rails-app-8080-error.log
+        CustomLog logs/rails-app-8080-access.log combined_session env=!resource
+        CustomLog logs/rails-app-8080-assets.log combined
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel info
+        PassengerLogLevel 3
+        PassengerMaxPoolSize 15
+        PassengerMinInstances 6
+        PassengerPoolIdleTime 10
+        PassengerDefaultUser apache
+        PassengerDefaultGroup apache
+</VirtualHost>
+
 ```
