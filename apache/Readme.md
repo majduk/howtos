@@ -1,8 +1,8 @@
-Apache Configuration examples
+##Apache Configuration examples
 
 
 
-## Adding query string param
+# Adding query string param
 ```
     #temp - quick fix
     RewriteCond %{REQUEST_URI} /uri/path
@@ -13,7 +13,7 @@ Apache Configuration examples
 ```
 
 
-## Reading part of a header into ENV
+# Reading part of a header into ENV
 ```
 
         RewriteEngine On
