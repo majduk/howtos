@@ -35,6 +35,11 @@
 
     
 ```
+Apache 2.4 without mod_rewrite
+```
+    SetEnvIf Authorization "^Bearer (.*)$" AUTH_TOKEN=$1
+```
+
 ## Rails, partly served from static - Apache 2.2, Passenger 3.0
 
 `http://server/any_path` goes to rails
