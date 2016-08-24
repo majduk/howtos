@@ -1,5 +1,15 @@
 # Apache Configuration examples
 
+
+## Adding part of a header to query string
+```
+    SetEnvIf Authorization "^Bearer (.*)$" ACCESS_TOKEN=$1
+    RewriteCond %{REQUEST_URI} /test
+    RewriteCond %{QUERY_STRING} !access_token
+    RewriteRule ^/test/test.php /test/test.php?access_token=%{ENV:ACCESS_TOKEN} [PT,QSA]
+
+```
+
 ## Adding query string param
 ```
     #temp - quick fix
