@@ -6,6 +6,7 @@
     SetEnvIf Authorization "^Bearer (.*)$" ACCESS_TOKEN=$1
     RewriteCond %{REQUEST_URI} /test
     RewriteCond %{QUERY_STRING} !access_token
+    RewriteCond %{ENV:ACCESS_TOKEN} !=""
     RewriteRule ^/test/test.php /test/test.php?access_token=%{ENV:ACCESS_TOKEN} [PT,QSA]
 
 ```
