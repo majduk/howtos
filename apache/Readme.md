@@ -1,5 +1,18 @@
 # Apache Configuration examples
 
+## Logging request processing time
+
+- Enable time into the LogFormat:
+```
+    LogFormat "%D -- %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" timed_comb
+    CustomLog /var/log/apache2/keystone_access.log timed_comb
+```
+
+- generate statistics:
+```
+tail -4000 /var/log/apache2/access.log | grep 'POST /v2.0/tokens' | awk 'BEGIN{min=10000; max=0; total=0; c=0;slow=0}{if ($1/1000000>2){slow=slow+1;}if ($1/1000000>max){max=$1/1000000}else{if ($i/1000000<min){min=$1/1000000} total=total+$1/1000000; c=c+1; }} END{avg=total/c;print "Min:"min"\nMax:"max"\nAvg:"avg"\n\nTotal requests:"c"\nSlow requests(>2s):"slow;}'
+```
+
 
 ## Adding part of a header to query string
 ```
