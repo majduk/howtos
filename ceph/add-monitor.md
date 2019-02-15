@@ -1,32 +1,38 @@
 ## Add monitor to cluster
 
 ### Manually 
-Example MONs to add:
-10.100.0.11:6789/0 mon.juju-17defc-2-lxd-1
 
-`service ceph-mon stop id=$(hostname)`
+1. Add first mon to monmap
 
-`ceph-mon -i $(hostname) --extract-monmap /tmp/monmap`
+`ceph mon add juju-17defc-0-lxd-0 10.100.0.9:6789`
 
-`monmaptool --print /tmp/monmap`
+2. start mon, eg: `lxc start juju-17defc-0-lxd-0`
 
-```
-monmaptool: monmap file /tmp/monmap
-epoch 3
-fsid 3f0cfaaa-308a-11e9-96fc-00163e49b053
-last_changed 2019-02-15 09:48:28.263838
-created 2019-02-14 19:00:04.995398
-0: 10.100.0.8:6789/0 mon.juju-17defc-3-lxd-0
-```
+3. Wait for the node to come up and juju status to stabilize
 
-`monmaptool /tmp/monmap --add juju-17defc-3-lxd-0 10.100.0.8:6789 --clobber`
+4. Add second mon to monmap
 
-`ceph-mon -i $(hostname) --inject-monmap /tmp/monmap`
+`ceph mon add juju-17defc-1-lxd-1 10.100.0.8:6789`
 
-`service ceph-mon start id=$(hostname)`
+2. start mon, eg: `lxc start juju-17defc-1-lxd-1`
+
+3. Wait for the node to come up and juju status to stabilize
+
+
 
 Note:
-If there is only one node, map dump should be done on the running one, but inject and startup should be done on the one that is being added.
+- Monmap editing command: `monmaptool /tmp/monmap --add juju-17defc-3-lxd-0 10.100.0.8:6789 --clobber`
+
+- monmap dumping from running node `ceph mon dump`:
+```
+dumped monmap epoch 9
+epoch 9
+fsid 3f0cfaaa-308a-11e9-96fc-00163e49b053
+last_changed 2019-02-15 12:08:45.684088
+created 2019-02-14 19:00:04.995398
+0: 10.100.0.9:6789/0 mon.juju-17defc-0-lxd-0
+1: 10.100.0.11:6789/0 mon.juju-17defc-2-lxd-1
+```
 
 ### With JUJU
 
