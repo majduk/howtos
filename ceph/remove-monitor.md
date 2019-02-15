@@ -1,5 +1,7 @@
 ## Manually remove monitor from monmap
 
+### If there is no quorum
+
 `service ceph-mon stop id=$(hostname)`
 
 `ceph-mon -i $(hostname) --extract-monmap /tmp/monmap`
@@ -23,3 +25,7 @@ created 2019-02-14 19:00:04.995398
 `ceph-mon -i $(hostname) --inject-monmap /tmp/monmap`
 
 `service ceph-mon start id=$(hostname)`
+
+### If there is quorum
+
+`ceph mon remove juju-17defc-2-lxd-1```
