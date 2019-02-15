@@ -6,6 +6,9 @@
 
 `ceph mon add juju-17defc-0-lxd-0 10.100.0.9:6789`
 
+Note:
+If there was only on MON, at this point **there is no quorum** so next step should be executed as soon as possible.
+
 2. start mon, eg: `lxc start juju-17defc-0-lxd-0`
 
 3. Wait for the node to come up and juju status to stabilize
