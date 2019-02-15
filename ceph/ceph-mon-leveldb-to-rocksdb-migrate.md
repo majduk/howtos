@@ -21,6 +21,11 @@ chown -R ceph:ceph /var/lib/ceph/mon/ceph-$(hostname)/
 4) Start service
 `service ceph-mon start id=$(hostname)`
 
+### Juju notes
+
+For step 2: `juju config ceph-mon config-flags="{global:{'mon keyvaluedb':'rocksdb'}}"`
+
+
 References:
 1. https://bugzilla.redhat.com/show_bug.cgi?id=1628321
 2. http://docs.ceph.com/docs/master/releases/luminous/?highlight=backfill 
