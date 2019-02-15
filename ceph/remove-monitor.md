@@ -28,4 +28,8 @@ created 2019-02-14 19:00:04.995398
 
 ### If there is quorum
 
-`ceph mon remove juju-17defc-2-lxd-1```
+`ceph mon remove juju-17defc-2-lxd-1`
+
+### Reference
+
+1. [troubleshooting-mon](http://docs.ceph.com/docs/mimic/rados/troubleshooting/troubleshooting-mon/#recovering-a-monitor-s-broken-monmap)
