@@ -1,5 +1,6 @@
 ## How to migrate Ceph MON from LevelDB to RocksDB
 
+This procedure requires ceph 10.2.9+
 
 1) Install tools: `apt install ceph-test`
 
