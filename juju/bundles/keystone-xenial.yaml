@@ -1,0 +1,67 @@
+series: xenial
+variables:
+  oam-space:           &oam-space           oam-space
+  admin-space:         &admin-space         oam-space
+  public-space:        &public-space        prod-space
+  internal-space:      &internal-space      prod-space
+  overlay-space:       &overlay-space       prod-space
+  ceph-public-space:   &ceph-public-space   prod-space
+  ceph-cluster-space:  &ceph-cluster-space  back-space
+  openstack-origin:    &openstack-origin    cloud:xenial-newton
+  mysql-vip:           &mysql-vip           10.100.0.19
+
+machines:
+  '0':
+    series: xenial
+    constraints: "tags=kearns"
+  '1':
+    series: xenial
+    constraints: "tags=kearns"
+  '2':
+    series: xenial
+    constraints: "tags=kearns"
+relations:
+- - keystone:shared-db
+  - mysql:shared-db
+- - mysql
+  - pxc-hacluster
+services:
+  keystone:
+    charm: cs:keystone
+    series: xenial
+    num_units: 3
+    bindings:
+      "": *oam-space
+      public: *public-space
+      admin: *admin-space
+      internal: *internal-space
+      shared-db: *internal-space
+    options:
+      admin-password: openstack
+      openstack-origin: *openstack-origin
+      worker-multiplier: 0.25
+    to:
+    - lxd:0
+    - lxd:1
+    - lxd:2
+  mysql:
+    charm: cs:percona-cluster
+    num_units: 3
+    series: xenial
+    bindings:
+      "": *oam-space
+      cluster: *internal-space
+      shared-db: *internal-space
+    options:
+      source: *openstack-origin
+      innodb-buffer-pool-size: 256M
+      max-connections: 1000
+      vip: *mysql-vip
+      performance-schema: True
+      root-password: ubuntu
+    to:
+    - lxd:0
+    - lxd:1
+    - lxd:2
+  pxc-hacluster:
+    charm: hacluster
