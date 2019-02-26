@@ -1,0 +1,69 @@
+series: trusty
+variables:
+  oam-space:           &oam-space           oam-space
+  ceph-public-space:   &ceph-public-space   prod-space
+  ceph-cluster-space:  &ceph-cluster-space  back-space
+  openstack-origin:    &openstack-origin    cloud:trusty-mitaka
+
+machines:
+  '0':
+    series: trusty
+    constraints: "tags=reeves"
+  '1':
+    series: trusty
+    constraints: "tags=reeves"
+  '2':
+    series: trusty
+    constraints: "tags=reeves"
+  '3':
+    series: trusty
+    constraints: "tags=reeves"
+  '4':
+    series: trusty
+    constraints: "tags=reeves"
+  '5':
+    series: trusty
+    constraints: "tags=reeves"
+relations:
+- - ceph-osd:mon
+  - ceph-mon:osd
+services:
+  ceph-mon:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:ceph-mon-23
+    num_units: 3
+    bindings:
+      "": *oam-space
+      public: *ceph-public-space
+    options:
+      monitor-count: 3
+      expected-osd-count: 5
+      source: *openstack-origin
+    to:
+    - lxd:1
+    - lxd:2
+    - lxd:3
+  ceph-osd:
+    annotations:
+      gui-x: '1000'
+      gui-y: '500'
+    charm: cs:ceph-osd-257
+    num_units: 6
+    bindings:
+      "": *oam-space
+      public: *ceph-public-space
+      cluster: *ceph-cluster-space
+    options:
+      osd-devices: /dev/vdb /dev/vdc /dev/vdd /dev/vde  
+      osd-reformat: 'yes'
+      source: *openstack-origin
+    to:
+    - '0'
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+
