@@ -1,5 +1,9 @@
 # How to enable automatic eviction of a failing node
 
+Requires Galera 3.8+:
+- https://packages.ubuntu.com/search?suite=default&section=all&arch=any&keywords=percona-galera-3&searchon=names
+Available in Xenial and onwards.
+
 Cereate `/etc/mysql/conf.d/mysql-autoevict.cnf`:
 ```
 [mysqld]
