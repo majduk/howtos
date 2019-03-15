@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+event=$1
+
+workdir=/root/ocf_notifications_handler
+logfile=$workdir/log
+mysql_pid=$( cat /var/run/mysqld/mysqld.pid)
+issue_dir=$workdir/$mysql_pid
+MYSQL_PASSWORD=PASS
+MYSQL_USERNAME=sstuser
+mkdir -p $workdir
+
+exec 9>>$logfile
+exec 2>&9
+exec 1>&9
+
+log() {
+    echo "[$( date '+%Y-%m-%d %H:%M:%S')] $$ $1"
+}
+
+ping_peers() {
+    ping -c1 -s2000 100.86.0.152
+    ping -c1 -s2000 100.86.0.137
+    ping -c1 -s2000 100.86.0.179
+}
+
+dump_wsrep() {
+    MYSQL_CMDLINE="mysql --connect-timeout=5 --user=${MYSQL_USERNAME} --password=${MYSQL_PASSWORD}"   
+    $MYSQL_CMDLINE -e "SHOW STATUS LIKE 'wsrep_%';"
+}
+
+dump_mysql() {
+    MYSQL_CMDLINE="mysql --connect-timeout=5 --user=${MYSQL_USERNAME} --password=${MYSQL_PASSWORD}"   
+    $MYSQL_CMDLINE -e "SHOW FULL PROCESSLIST;"
+    $MYSQL_CMDLINE -e "SHOW GLOBAL STATUS;"
+}
+
+tcpdump_stop() {
+   /root/dump_mngr.sh stop
+}
+
+tcpdump_start() {
+   /root/dump_mngr.sh start
+}
+handle_failed() {
+    #Mysql is dead or not serving queries
+    set -x
+    crm_mon -Af -1
+    ps -ef | grep mysql
+    netstat -antp | grep 3306
+    netstat -antp | grep 4567
+    free -m
+    ping_peers
+    tcpdump_stop
+    mv /root/percona /root/percona-crash-pcap-$( date '+%Y%m%d%H%M%S')
+    mkdir /root/percona
+    tcpdump_start
+    set +x
+}
+
+handle_timeout() {
+    #Mysql in RO state for > 20s
+    set -x
+    crm_mon -Af -1
+    ps -ef | grep mysql
+    netstat -antp | grep 3306
+    netstat -antp | grep 4567
+    free -m
+    ping_peers
+    dump_wsrep
+    dump_mysql
+    tcpdump_stop
+    mv /root/percona /root/percona-crash-pcap-$( date '+%Y%m%d%H%M%S')
+    mkdir /root/percona
+    tcpdump_start
+    set +x
+}
+
+log "Start handling event $event" 
+case "$event" in
+  "ro")
+       case "$2" in
+           1*)
+             log "MySQL PID=$mysql_pid"
+             set -x
+             ping_peers
+             dump_wsrep
+             set +x
+             ;;
+       esac
+       ;;
+   "rw")
+       tcpdump_start
+       ;;
+   "failed")
+       (
+           flock -x -n 200
+           if [ $? -eq 0 ]; then
+               handle_failed
+           else
+               log "Another instance already running"
+           fi
+       ) 200>/tmp/ocf_notifications_handler.lock
+       ;;
+   "timeout")
+       (
+           flock -x -n 200
+           if [ $? -eq 0 ]; then
+               handle_timeout
+           else
+               log "Another instance already running"
+           fi
+       ) 200>/tmp/ocf_notifications_handler.lock
+       ;;
+   *)
+       ;;
+esac
+log "Finished handling event $event"
