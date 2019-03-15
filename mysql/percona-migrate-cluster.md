@@ -76,9 +76,22 @@ TBD!!
 6) shutdown old cluster `juju run --application percona-cluster "sudo service mysql stop"`
 
 6) reconfigure VIP
+```
 juju config percona-cluster-x vip=100.86.0.9 
+```
+And on any of the cluster node update VIP (to avoid removing and readding relation with HA-Cluster):
+```
+crm config 
+crm(live)configure# edit
+<edit the config>
+crm(live)configure# quit
+There are changes pending. Do you want to commit them? y
+bye
+```
 
 7) update relations to new cluster
+```
 juju remove-relation keystone percona-cluster
 juju remove-relation keystone percona-cluster-x
+```
 
