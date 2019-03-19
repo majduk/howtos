@@ -12,3 +12,6 @@ TheSecreTPass
 ```
 juju-cli:~$ juju run --unit percona-cluster/0 leader-set root-password=MoreSecretPassword
 ```
+
+**Note:**
+This changes only the relation stored password. The actual password stored in MySQL is kept the same.
