@@ -37,7 +37,20 @@ proxy 30 IN A <proxy_ip>
 
 ### MAAS managed DNS
 
-The description below coveres MAAS based DNS [[2](https://docs.maas.io/2.5/en/api#dnsresourcerecord)].
+The description below coveres MAAS based DNS [[2](https://docs.maas.io/2.5/en/api#dnsresourcerecord)]. The example below assumes, that you use default domain, `.maas` and you add proxy located at `http://10.17.0.4:1080`.
+
+1. Add DNS resource
+```
+maas maas-profle dnsresources create fqdn=proxy.maas ip_addresses=10.17.0.4
+```
+
+2. Add resource record
+```
+maas maas-profile dnsresource-records create domain=maas name=_http._tcp.proxy rrtype=srv rrdata="10 10 1080 proxy"
+```
+
+This setup will allow also DNS based HA.
+
 
 ### Testing
 
