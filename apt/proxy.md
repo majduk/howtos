@@ -18,7 +18,7 @@ This solution assumes that you do not have the access for the DNS configuration.
 
 In such a case you should add following APT configuration: 
 ```
-Acquire::http::Proxy "http://100.107.0.4:1080/";
+Acquire::http::Proxy "http://<proxy ip>:<proxy port>/";
 Acquire::EnableSrvRecords "false";
 ```
 
