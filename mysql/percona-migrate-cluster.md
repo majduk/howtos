@@ -1,11 +1,13 @@
 # How to migrate Openstack database
 
-1) Deploy additional cluster using xenial and temporary VIP and wait until deployed
+1) Deploy additional cluster using xenial and temporary VIP and wait until deployed.
+It is advisible to do it this way instead of first deploying Percona cluster and then adding relation to hacluster because in the latter case the installation of hacluster software takes time and the overall downtime is longer.
+
 - `percona-new.yaml` file:
 ```
 series: xenial
 variables:
-  mysql-vip:           &mysql-vip           100.86.0.19
+  mysql-vip:           &mysql-vip           100.86.0.19 #temporary VIP
 
 relations:
 - - percona-cluster-x
@@ -51,47 +53,74 @@ Online: [ juju-2f583d-10-lxd-12 juju-2f583d-11-lxd-8 juju-2f583d-9-lxd-12 ]
 3) stop keystone: `juju run --application keystone "sudo service apache2 stop"`
 
 4) dump mysql database on old master
-- Obtain password from any node in old cluster
+- Obtain root password from any node in old cluster
 ```
-cat /etc/mysql/my.cnf | grep wsrep_sst_auth`
-export MYSQL_USER=sstuser
-export MYSQL_PASSWORD=<PASSWORD>
+export MYSQL_USER=root
+export MYSQL_PASSWORD=$( juju run --unit percona-cluster/0 leader-get root-password )
 ```
-- dump database:
+- export data for all the databases, except system ones:
 ```
-TBD!!
+designate
+nova_api
+heat
+dpm
+nova
+keystone
+cinder
+glance
+neutron
+```
+
+```
+mysqldump --user=$MYSQL_USER --password=$MYSQL_PASSWORD  $DATABASE > /tmp/dump_$DATABASE.sql
 ```
 
 5) import mysql database on new master
 - Obtain password from any node in new cluster
 ```
-cat /etc/mysql/my.cnf | grep wsrep_sst_auth`
-export MYSQL_USER=sstuser
-export MYSQL_PASSWORD=<PASSWORD>
+export MYSQL_USER=root
+export MYSQL_PASSWORD=$( juju run --unit percona-cluster-x/0 leader-get root-password )
 ```
-- import database:
+- import all databases:
 ```
-TBD!!
+designate
+nova_api
+heat
+dpm
+nova
+keystone
+cinder
+glance
+neutron
 ```
-6) shutdown old cluster `juju run --application percona-cluster "sudo service mysql stop"`
 
-6) reconfigure VIP
+```
+mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -c "CREATE DATABASE $DATABASE;"
+mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $DATABASE < /tmp/dump-$DATABASE.sql
+```
+
+6) shutdown old cluster's VIP
+`juju ssh percona-cluster/0 "sudo crm resource stop res_mysql_vip"`
+
+6) reconfigure VIP for new Cluster
 ```
 juju config percona-cluster-x vip=100.86.0.9 
 ```
-And on any of the cluster node update VIP (to avoid removing and readding relation with HA-Cluster):
+And on any of the cluster node update VIP via `crmsh` (to avoid removing and readding relation with HA-Cluster):
 ```
 crm config 
 crm(live)configure# edit
-<edit the config>
+<edit the virtual IP in the config and set it to  100.86.0.9 >
 crm(live)configure# quit
 There are changes pending. Do you want to commit them? y
 bye
 ```
 
-7) update relations to new cluster
+7) update relations to new cluster for each service:
+
 ```
 juju remove-relation keystone percona-cluster
-juju remove-relation keystone percona-cluster-x
+juju add-relation keystone percona-cluster-x
 ```
 
+7) Remove old cluster.
