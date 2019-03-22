@@ -29,7 +29,7 @@ services:
     series: xenial
 ```
 - Run:
-`juju deploy --debug percona-new.yaml`
+`juju deploy --debug percona-new.yaml --to: <placement>`
 
 2) identify old master node:
 ```
