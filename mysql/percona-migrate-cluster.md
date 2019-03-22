@@ -1,4 +1,4 @@
-# How to migrate Openstack database
+# How to migrate Openstack database cluster
 
 1) Deploy additional cluster using xenial and temporary VIP and wait until deployed.
 It is advisible to do it this way instead of first deploying Percona cluster and then adding relation to hacluster because in the latter case the installation of hacluster software takes time and the overall downtime is longer.
@@ -31,7 +31,7 @@ services:
 - Run:
 `juju deploy --debug percona-new.yaml`
 
-3) identify old master node:
+2) identify old master node:
 ```
 root@juju-2f583d-11-lxd-8:~# crm status
 Last updated: Fri Mar 15 16:47:23 2019
@@ -102,7 +102,7 @@ mysql -u$MYSQL_USER -p$MYSQL_PASSWORD $DATABASE < /tmp/dump-$DATABASE.sql
 6) shutdown old cluster's VIP
 `juju ssh percona-cluster/0 "sudo crm resource stop res_mysql_vip"`
 
-6) reconfigure VIP for new Cluster
+7) reconfigure VIP for new Cluster
 ```
 juju config percona-cluster-x vip=100.86.0.9 
 ```
@@ -116,11 +116,23 @@ There are changes pending. Do you want to commit them? y
 bye
 ```
 
-7) update relations to new cluster for each service:
+8) update relations to new cluster for each service:
+
+- check-mk-agent
+- nrpe
+- cinder
+- designate
+- glance
+- heat
+- neutron-api
+- nova-cloud-controller
+- keystone
 
 ```
-juju remove-relation keystone percona-cluster
-juju add-relation keystone percona-cluster-x
+juju remove-relation $SERVICE percona-cluster
+juju add-relation $SERVICE percona-cluster-x
 ```
 
-7) Remove old cluster.
+9) start keystone: `juju run --application keystone "sudo service apache2 stop"`
+
+10) Remove old cluster.
