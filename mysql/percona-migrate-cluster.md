@@ -74,6 +74,12 @@ neutron
 ```
 mysqldump --user=$MYSQL_USER --password=$MYSQL_PASSWORD  $DATABASE > /tmp/dump_$DATABASE.sql
 ```
+Example expected time for a keystone database of ~2.5G is:
+```
+real    0m32.619s
+user    0m27.732s
+sys     0m4.660s
+```
 
 5) import mysql database on new master
 - Obtain password from any node in new cluster
