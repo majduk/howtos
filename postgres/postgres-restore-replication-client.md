@@ -1,12 +1,13 @@
-# Postgres cluster recovery:
+# Postgres cluster recovery
 
-Check if clustered:
+## Check if clustered
 ```
 postgres@ic-defraf1-infra2:~$ pg_lsclusters
 Ver Cluster Port Status Owner    Data directory               Log file
 9.5 main    5432 online postgres /var/lib/postgresql/9.5/main /var/log/postgresql/postgresql-9.5-main.log
 ```
 
+## Slave setup 
 On slave for full replication start:
 ```
 systemctl stop postgresql
@@ -39,7 +40,7 @@ Start postgres, it will start replication:
 systemctl start postgresql
 ```
 
-Check status:
+## Check status
 
 Master:
 ```
@@ -56,3 +57,14 @@ postgres=# select pg_is_in_recovery();
  t
 (1 row)
 ```
+
+## Sync vs async
+
+For sync:
+```
+postgres@master:~$ cat /var/lib/pgsql/tmp/rep_mode.conf
+synchronous_standby_names = 'slave1'
+```
+
+
+
