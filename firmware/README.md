@@ -6,7 +6,8 @@
 
 ``` http_proxy= https_proxy= \
 python update_firmware-4.0.2c.py --user admin --password <pass> --address <CMIC IP> --remoteshareip <CMIC IP> \
---sharedirectory /fw-upgrade / --imagefile ucs-c240m5-huu-4.0.4f.iso  --sharetype www --componentlist all```
+--sharedirectory /fw-upgrade / --imagefile ucs-c240m5-huu-4.0.4f.iso  --sharetype www --componentlist all
+```
 
 **References:**
 - https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/release/notes/b_UCS_C-Series_RN_4_0_2.html
