@@ -17,6 +17,18 @@ Update Stage Update Progress Current FW Version
 NONE         100             3.1(2c)   
 ```
 
+Expect script:
+```
+#!/usr/bin/expect -f
+spawn ssh admin@100.100.191.15
+expect "password: "
+send "<password>\r"
+expect "# "
+send "show cimc/firmware\r"
+expect "# "
+send "exit\r"
+```
+
 
 **References:**
 - https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/release/notes/b_UCS_C-Series_RN_4_0_2.html
