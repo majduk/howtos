@@ -6,8 +6,10 @@
 
 ``` http_proxy= https_proxy= \
 python update_firmware-4.0.2c.py --user admin --password <pass> --address <CMIC IP> --remoteshareip <MGMT server IP> \
---sharedirectory /fw-upgrade / --imagefile ucs-c240m5-huu-4.0.4f.iso  --sharetype www --componentlist all
+--sharedirectory /fw-upgrade  --imagefile ucs-c240m5-huu-4.0.4f.iso  --sharetype www --componentlist all
 ```
+
+This expects the image at http://<MGMT server IP>/fw-upgrade/ucs-c240m5-huu-4.0.4f.iso
 
 Vesrion:
 ```
