@@ -9,7 +9,7 @@ python update_firmware-4.0.2c.py --user admin --password <pass> --address <CMIC 
 --sharedirectory /fw-upgrade  --imagefile ucs-c240m5-huu-4.0.4f.iso  --sharetype www --componentlist all
 ```
 
-This expects the image at http://<MGMT server IP>/fw-upgrade/ucs-c240m5-huu-4.0.4f.iso
+This expects the image at `http://<MGMT server IP>/fw-upgrade/ucs-c240m5-huu-4.0.4f.iso`
 
 Vesrion:
 ```
