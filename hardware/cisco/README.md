@@ -28,4 +28,4 @@ https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/c/sw/api/2-0/b_Cisco
 ```
 root@infra2:/var/log# ipmitool -I lanplus -H <ip> -U admin -P <pass> chassis bootdev pxe options=persistent
 ```
-Set Boot Device to pxe
+Set Boot Device to pxe - does not work
