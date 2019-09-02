@@ -1,25 +1,8 @@
-Set boot order:
+# Set boot order:
+
+## SSH
 ```
 ubuntu@infra2:~/test-deploy$ ssh admin@<ip>
-C240-WZP21470035# show 
-bios               certificate        chassis            cimc               configuration      dimm-blacklisting  fault              http               
-power-or-performance  processor             security              server-management     
-
-C240-WZP21470035 /bios # show boot-device 
-C240-WZP21470035 /bios # show actual-boot-order 
-Boot Order   Boot Device                         Device Type     Boot Policy          
------------- ----------------------------------- --------------- -------------------- 
-1            "UEFI: PXE IP4 Intel(R) Ethernet...                 NonPolicyTarget      
-2            "UEFI: PXE IP4 Intel(R) Ethernet...                 NonPolicyTarget      
-3            "UEFI: PXE IP4 Cisco(R) Ethernet...                 NonPolicyTarget      
-4            "UEFI: PXE IP4 Cisco(R) Ethernet...                 NonPolicyTarget      
-5            "UEFI: PXE IP4 Cisco(R) Ethernet...                 NonPolicyTarget      
-6            "UEFI: PXE IP4 Cisco(R) Ethernet...                 NonPolicyTarget      
-7            "UEFI: Built-in EFI Shell"                          NonPolicyTarget      
-8            "UEFI: PXE IP4 Cisco(R) Ethernet...                 NonPolicyTarget      
-9            "UEFI: PXE IP4 Cisco(R) Ethernet...                 NonPolicyTarget      
-10           "UEFI: PXE IP4 Cisco(R) Ethernet...                 NonPolicyTarget      
-11           "UEFI: PXE IP4 Cisco(R) Ethernet...                 NonPolicyTarget      
 C240-WZP21470035 /bios # set boot-order pxe,hdd    
 To manage boot-order:
 - Reboot server to have your boot-order settings take place
@@ -35,5 +18,10 @@ C240-WZP21470035 /bios *# commit
 Changes to BIOS set-up parameters will require a reboot.
 Do you want to reboot the system?[y|N]y
 A system reboot has been initiated.
-  
 ```
+
+## API
+https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/c/sw/api/2-0/b_Cisco_IMC_api_2_0/b_Cisco_IMC_api_2_0_appendix_0110.html#reference_9DBE7486B7EE4F399398645FEC9333D9__section_7CA5342DFD88411F9FB4F7731DF79DDA
+
+## IPMI
+
