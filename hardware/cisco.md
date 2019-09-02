@@ -31,4 +31,9 @@ To manage boot-order:
   seen by the BIOS
 - Legacy Boot Order configuration will disable all the active Boot Devices which will
   hide them from BIOS
+C240-WZP21470035 /bios *# commit          
+Changes to BIOS set-up parameters will require a reboot.
+Do you want to reboot the system?[y|N]y
+A system reboot has been initiated.
+  
 ```
