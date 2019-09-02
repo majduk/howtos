@@ -5,7 +5,7 @@
 **Note:** This requires Cisco support account to download firmware image.
 
 ``` http_proxy= https_proxy= \
-python update_firmware-4.0.2c.py --user admin --password <pass> --address <CMIC IP> --remoteshareip <CMIC IP> \
+python update_firmware-4.0.2c.py --user admin --password <pass> --address <CMIC IP> --remoteshareip <MGMT server IP> \
 --sharedirectory /fw-upgrade / --imagefile ucs-c240m5-huu-4.0.4f.iso  --sharetype www --componentlist all
 ```
 
