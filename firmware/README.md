@@ -29,6 +29,15 @@ expect "# "
 send "exit\r"
 ```
 
+Checking hardware faults:
+```
+C240-WZP2147002Y# scope fault 
+C240-WZP2147002Y /fault # show fault-entries 
+Time                      Severity      Description                             
+------------------------- ------------- --------------------------------------- 
+2019-08-17T16:46:42       critical      "IERR: A catastrophic fault has occurred on one of the processors: Please check the processor's status." 
+2019-06-23T20:04:15       major         "DDR4_P1_F1_ECC: DIMM 11 is inoperable : Check or replace DIMM" 
+```
 
 **References:**
 - https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/release/notes/b_UCS_C-Series_RN_4_0_2.html
