@@ -1,6 +1,6 @@
 
 
-
+```
 /admin1-> racadm get nic.VndrConfigPage
 NIC.VndrConfigPage.1 [Key=NIC.Integrated.1-1-1#VndrConfigPage]
 NIC.VndrConfigPage.2 [Key=NIC.Integrated.1-2-1#VndrConfigPage]
@@ -40,7 +40,7 @@ VirtMacAddr=00:00:00:00:00:00
 #iSCSIBootSupport=Available
 #iSCSIDualIPVersionSupport=Unavailable
 #iSCSIOffloadSupport=Unavailable
-
+```
 
 
 
