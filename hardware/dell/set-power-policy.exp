@@ -1,0 +1,18 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+set hostname [lindex $argv 0]
+set username [lindex $argv 1]
+set password [lindex $argv 2]
+
+set timeout -1
+spawn ssh -q -o StrictHostKeyChecking=no $username@$hostname
+expect "password: "
+send "$password\r"
+expect "> "
+send "racadm set BIOS.SysSecurity.AcPwrRcvry On\r"
+expect "> "
+send "racadm jobqueue create BIOS.Setup.1-1\r"
+expect "> "
+send "racadm serveraction hardreset\n"
+expect "> "
