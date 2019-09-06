@@ -1,0 +1,22 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+set hostname [lindex $argv 0]
+set username [lindex $argv 1]
+set password [lindex $argv 2]
+
+set timeout -1
+spawn ssh -q -o StrictHostKeyChecking=no $username@$hostname
+expect "password: "
+send -- "$password\r"
+expect "C240-*#"
+send -- "scope sol\r"
+expect "C240-* /sol #"
+send -- "set enabled yes\r"
+expect "C240-* /sol *#"
+send -- "commit\r"
+expect "C240-* /sol #"
+send -- "exit\r"
+expect "C240-*#"
+send -- "exit\r"
+expect eof
