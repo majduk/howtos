@@ -1,0 +1,32 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+set hostname [lindex $argv 0]
+set username [lindex $argv 1]
+set password [lindex $argv 2]
+
+set timeout -1
+spawn ssh -q -o StrictHostKeyChecking=no $username@$hostname
+expect "password: "
+send -- "$password\r"
+expect "C240-*#"
+send -- "scope bios/processor\r"
+expect "C240-* /bios/processor #"
+send -- "set PwrPerfTuning OS\r"
+expect "C240-* /bios/processor *#"
+send -- "commit\r"
+expect { 
+    "Do you want to reboot the system*" { 
+        send "n\r"
+        expect "C240-* /bios/processor #"
+        send "exit\r"
+    }
+    "C240-* /bios/processor #" {
+        send "exit\r"
+    }
+}
+expect "C240-* /bios #"
+send -- "exit\r"
+expect "C240-*#"
+send -- "exit\r"
+expect eof
