@@ -34,6 +34,7 @@ serveraction hardreset
 racadm get nic.nicconfig.2.legacybootproto
 
 ---
+racadm set racadm set  BIOS.NetworkSettings.PxeDev1EnDis Enabled
 racadm set BIOS.PxeDev1Settings.PxeDev1Interface NIC.Slot.1-1-1
 racadm jobqueue create BIOS.Setup.1-1
 racadm serveraction hardreset
@@ -62,3 +63,20 @@ racadm get BIOS.BiosBootSettings.SetBootOrderEn
 racadm set BIOS.BiosBootSettings.SetBootOrderEn NIC.PxeDevice.1-1,NIC.PxeDevice.2-1,NIC.PxeDevice.3-1,NIC.PxeDevice.4-1
 racadm set BIOS.BiosBootSettings.UefiBootSeq NIC.PxeDevice.1-1,NIC.PxeDevice.2-1,NIC.PxeDevice.3-1,NIC.PxeDevice.4-1
 ```
+
+Full script:
+```
+racadm set racadm get  BIOS.NetworkSettings.PxeDev1EnDis Enabled
+racadm set BIOS.PxeDev1Settings.PxeDev1Interface NIC.Integrated.1-1-1
+racadm set racadm get  BIOS.NetworkSettings.PxeDev2EnDis Enabled
+racadm set BIOS.PxeDev1Settings.PxeDev2Interface NIC.Integrated.1-2-1
+racadm set racadm get  BIOS.NetworkSettings.PxeDev3EnDis Enabled
+racadm set BIOS.PxeDev1Settings.PxeDev3Interface NIC.Slot.1-1-1
+racadm set racadm get  BIOS.NetworkSettings.PxeDev4EnDis Enabled
+racadm set BIOS.PxeDev1Settings.PxeDev4Interface NIC.Slot.1-2-1
+racadm set BIOS.BiosBootSettings.UefiBootSeq NIC.PxeDevice.1-1,NIC.PxeDevice.2-1,NIC.PxeDevice.3-1,NIC.PxeDevice.4-1
+racadm set BIOS.BiosBootSettings.SetBootOrderEn NIC.PxeDevice.1-1,NIC.PxeDevice.2-1,NIC.PxeDevice.3-1,NIC.PxeDevice.4-1
+racadm jobqueue create BIOS.Setup.1-1
+racadm serveraction hardreset
+```
+
