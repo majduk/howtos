@@ -1,0 +1,30 @@
+#!/usr/bin/expect -f
+
+set host [lindex $argv 0]
+set pass [lindex $argv 1]
+set source [lindex $argv 2]
+set timeout 10
+spawn ssh $host
+expect "password: "
+send "$pass\r"
+expect "> "
+send "racadm set BIOS.NetworkSettings.PxeDev1EnDis Enabled \r"
+expect "> "
+send "racadm set BIOS.PxeDev1Settings.PxeDev1Interface NIC.Integrated.1-1-1\r"
+expect "> "
+send "racadm set BIOS.NetworkSettings.PxeDev2EnDis Enabled \r"
+expect "> "
+send "racadm set BIOS.PxeDev2Settings.PxeDev2Interface NIC.Integrated.1-2-1\r"
+expect "> "
+send "racadm set BIOS.NetworkSettings.PxeDev3EnDis Enabled \r"
+expect "> "
+send "racadm set BIOS.PxeDev3Settings.PxeDev3Interface NIC.Slot.1-1-1\r"
+expect "> "
+send "racadm set BIOS.NetworkSettings.PxeDev4EnDis Enabled \r"
+expect "> "
+send "racadm set BIOS.PxeDev4Settings.PxeDev4Interface NIC.Slot.1-2-1\r"
+expect "> "
+send "racadm jobqueue create BIOS.Setup.1-1\r"
+expect "> "
+send "racadm serveraction hardreset\n"
+expect "> "
