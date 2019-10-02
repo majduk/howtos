@@ -36,5 +36,29 @@ racadm get nic.nicconfig.2.legacybootproto
 ---
 racadm set BIOS.PxeDev1Settings.PxeDev1Interface NIC.Slot.1-1-1
 racadm jobqueue create BIOS.Setup.1-1
-serveraction hardreset
+racadm serveraction hardreset
+```
+
+```
+/admin1-> racadm get bIOS.BiosBootSettings
+[Key=BIOS.Setup.1-1#BiosBootSettings]
+BootMode=Uefi
+BootSeq=
+BootSeqRetry=Enabled
+GenericUsbBoot=Disabled
+#HddFailover=Disabled
+HddPlaceholder=Disabled
+HddSeq=
+SetBootOrderDis=
+SetBootOrderEn=RAID.Integrated.1-1,NIC.PxeDevice.1-1,NIC.PxeDevice.2-1,NIC.PxeDevice.3-1,NIC.PxeDevice.4-1
+SetBootOrderFqdd1=
+...
+UefiBootSeq=RAID.Integrated.1-1,NIC.PxeDevice.1-1,NIC.PxeDevice.2-1,NIC.PxeDevice.3-1,NIC.PxeDevice.4-1
+
+```
+
+```
+racadm get BIOS.BiosBootSettings.SetBootOrderEn
+racadm set BIOS.BiosBootSettings.SetBootOrderEn NIC.PxeDevice.1-1,NIC.PxeDevice.2-1,NIC.PxeDevice.3-1,NIC.PxeDevice.4-1
+racadm set BIOS.BiosBootSettings.UefiBootSeq NIC.PxeDevice.1-1,NIC.PxeDevice.2-1,NIC.PxeDevice.3-1,NIC.PxeDevice.4-1
 ```
