@@ -40,7 +40,7 @@ uvt-kvm wait microstack
 
 3. Attach msbr0 interface to the microstack VM:
 ```
-virsh attach-interface --domain microstack --type bridge --source msbr0 --target mseth0 --model virtio --config
+virsh attach-interface --domain microstack --type bridge --source msbr0 --model virtio --config
 ```
 4. Reboot microstack VM
 
