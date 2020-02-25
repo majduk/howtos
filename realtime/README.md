@@ -79,4 +79,14 @@ $ sudo update-grub
 
 8. Reboot and verify
 
-
+To copy the kernel:
+```
+tar -czvf /tmp/linux-5.4.5-rt3.tgz 
+/boot/initrd.img-5.4.5-rt3 \
+/boot/System.map-5.4.5-rt3 \
+/boot/config-5.4.5-rt3 \
+/boot/vmlinuz-5.4.5-rt3 \
+/boot/grub/menu.lst \
+/lib/modules/5.4.5-rt3
+```
+Then extract on target and run `update-grub`
