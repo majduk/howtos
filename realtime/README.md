@@ -13,7 +13,7 @@ $ tar xvzf linux-5.4.19.tar.gz
 Patch rt kernel
 ```
 $ cd linux-5.4.19
-$ gzip -cd ../patch-5.4.19-rt11.patch.gz | patch -p1 --verbose {}
+$ xzcat ../patch-5.4.19-rt11.patch.xz | patch -p1 --verbose
 ```
 3. Install required packages
 
