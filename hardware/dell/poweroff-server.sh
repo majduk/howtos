@@ -7,6 +7,6 @@ set timeout 3600
 spawn ssh $host
 expect "password: "
 send "$pass\r"
-expect "> "
+expect ">"
 send "racadm serveraction powerdown\r"
-expect "> "
+expect ">"

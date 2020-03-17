@@ -7,6 +7,6 @@ set timeout 3600
 spawn ssh $host
 expect "password: "
 send "$pass\r"
-expect "> "
+expect ">"
 send "racadm set LifecycleController.LCAttributes.LifecycleControllerState 0\r"
-expect "> "
+expect ">"

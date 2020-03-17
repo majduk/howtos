@@ -9,13 +9,13 @@ set timeout -1
 spawn ssh -q -o StrictHostKeyChecking=no $username@$hostname
 expect "password: "
 send "$password\r"
-expect "> "
+expect ">"
 send "racadm set iDRAC.IPMISol.Enable 1\r"
-expect "> "
+expect ">"
 send "racadm set iDRAC.IPMISol.MinPrivilege 1\r"
-expect "> "
+expect ">"
 send "racadm set iDRAC.IPMISol.BaudRate 115200\r"
-expect "> "
+expect ">"
 send "racadm set set iDRAC.Users.1.SolEnable 4\r"
-expect "> "
+expect ">"
 
