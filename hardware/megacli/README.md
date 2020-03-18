@@ -39,3 +39,7 @@ Convert drive to JBOD:
 megacli -PDMakeJBOD -PhysDrv[32:6] -a0
 ```
 Where: 32 - enclosure ID, 6 - Enclosure Slot
+
+## Reference:
+- [Cheat Sheet](http://www.vmwareadmins.com/megacli-working-examples-cheat-sheet/)
+
