@@ -1,11 +1,12 @@
 #!/usr/bin/expect -f
 
-set timeout 20
+# this expects to have a tftp server running at source and exposing firmimgFIT.d9 at /
+
 set hostname [lindex $argv 0]
 set username [lindex $argv 1]
 set password [lindex $argv 2]
-
-
+set source [lindex $argv 3]
+set timeout 3600
 spawn ssh -q -o StrictHostKeyChecking=no $username@$hostname
 expect "password: "
 send "$password\r"
@@ -13,9 +14,6 @@ expect {
  "racadm>>" { set delim "racadm>>" }
  "admin1->"  { set delim "admin1->" }
 }
-send "racadm set Storage.Controller.1.RequestedControllerMode EnhancedHBA \r"
 expect "$delim"
-send "racadm jobqueue create RAID.Integrated.1-1\r"
-expect "$delim"
-send "racadm serveraction hardreset\n"
+send "racadm fwupdate -a $source -d / -g -u\r"
 expect "$delim"

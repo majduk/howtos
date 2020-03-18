@@ -17,7 +17,14 @@ expect {
 # Set boot UEFI
 send "racadm set BIOS.BiosBootSettings.BootMode Uefi\r"
 expect "$delim"
-send "racadm set BIOS.BiosBootSettings.UefiBootSeq NIC.PxeDevice.1-1,NIC.PxeDevice.2-1\r"
+# Set boot order
+send "racadm set BIOS.NetworkSettings.PxeDev1EnDis Enabled \r"
+expect "$delim"
+send "racadm set BIOS.PxeDev1Settings.PxeDev1Interface NIC.Integrated.1-1-1\r"
+expect "$delim"
+send "racadm set BIOS.NetworkSettings.PxeDev2EnDis Enabled \r"
+expect "$delim"
+send "racadm set BIOS.PxeDev2Settings.PxeDev2Interface NIC.Integrated.1-2-1\r"
 expect "$delim"
 # Save settings and reboot
 send "racadm jobqueue create BIOS.Setup.1-1\r"

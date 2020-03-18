@@ -13,9 +13,5 @@ expect {
  "racadm>>" { set delim "racadm>>" }
  "admin1->"  { set delim "admin1->" }
 }
-send "racadm set Storage.Controller.1.RequestedControllerMode EnhancedHBA \r"
-expect "$delim"
-send "racadm jobqueue create RAID.Integrated.1-1\r"
-expect "$delim"
-send "racadm serveraction hardreset\n"
+send "racadm set LifecycleController.LCAttributes.LifecycleControllerState 1\r"
 expect "$delim"

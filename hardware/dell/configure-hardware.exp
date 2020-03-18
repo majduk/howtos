@@ -1,0 +1,69 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+set hostname [lindex $argv 0]
+set username [lindex $argv 1]
+set password [lindex $argv 2]
+
+
+spawn ssh -q -o StrictHostKeyChecking=no $username@$hostname
+expect "password: "
+send "$password\r"
+expect {
+ "racadm>>" { set delim "racadm>>" }
+ "admin1->"  { set delim "admin1->" }
+}
+
+# Enable IPMI over LAN
+send "racadm set iDRAC.IPMILan.Enable 1\r"
+expect "$delim"
+send "racadm set iDRAC.IPMILan.EncryptionKey 0000000000000000000000000000000000000000\r"
+expect "$delim"
+# Set boot UEFI
+send "racadm set BIOS.BiosBootSettings.BootMode Uefi\r"
+expect "$delim"
+# Set boot order
+send "racadm set BIOS.NetworkSettings.PxeDev1EnDis Enabled \r"
+expect "$delim"
+send "racadm set BIOS.PxeDev1Settings.PxeDev1Interface NIC.Integrated.1-1-1\r"
+expect "$delim"
+send "racadm set BIOS.NetworkSettings.PxeDev2EnDis Enabled \r"
+expect "$delim"
+send "racadm set BIOS.PxeDev2Settings.PxeDev2Interface NIC.Integrated.1-2-1\r"
+expect "$delim"
+send "racadm set BIOS.BiosBootSettings.UefiBootSeq NIC.PxeDevice.1-1,NIC.PxeDevice.2-1\r"
+expect "$delim"
+# Set power policy
+send "racadm set BIOS.SysSecurity.AcPwrRcvry On\r"
+expect "$delim"
+# Set power profile
+send "racadm set BIOS.SysProfileSettings.SysProfile Custom\r"
+expect "$delim"
+send "racadm set BIOS.SysProfileSettings.ProcPwrPerf OsDbpm\r"
+expect "$delim"
+# Set serial redirect
+send "racadm set BIOS.SerialCommSettings.ConTermType Vt100Vt220\r"
+expect "$delim"
+send "racadm set BIOS.SerialCommSettings.RedirAfterBoot Enabled\r"
+expect "$delim"
+send "racadm BIOS.SerialCommSettings.SerialPortAddress Serial1Com2Serial2Com1\r"
+expect "$delim"
+send "racadm set BIOS.SerialCommSettings.SerialComm OnConRedirCom2\r"
+expect "$delim"
+send "racadm set BIOS.SerialCommSettings.FailSafeBaud 115200\r"
+expect "$delim"
+# Set Serial over LAN
+send "racadm set iDRAC.IPMISol.Enable 1\r"
+expect "$delim"
+send "racadm set iDRAC.IPMISol.MinPrivilege 4\r"
+expect "$delim"
+send "racadm set iDRAC.IPMISol.BaudRate 115200\r"
+expect "$delim"
+send "racadm set iDRAC.Users.2.SolEnable Enabled\r"
+expect "$delim"
+# Save settings and reboot
+send "racadm jobqueue create BIOS.Setup.1-1\r"
+expect "$delim"
+send "racadm serveraction hardreset\n"
+expect "$delim"
+
