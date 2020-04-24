@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
-ID=$( juju run --unit keystone/leader relation-ids ha )
-LIST=$( juju run --unit keystone/leader "relation-list -r  $ID " ) 
-juju run --unit keystone/leader "relation-get -r ha:52 - hacluster-keystone/0"
-
-
-juju run --unit keystone/leader "relation-get -r $ID - $LIST"
-
-#all:
-juju run --unit keystone/leader 'ID=$(relation-ids ha); for unit in $(relation-list -r  $ID); do relation-get -r $ID - $unit; done'
+UNIT=$1
+RELATION=$2
+ID=$( juju run --unit $UNIT relation-ids $RELATION )
+if [ -z $ID ];then
+    echo "No relation $UNIT $RELATION"
+    exit 1
+fi
+LIST=$( juju run --unit $UNIT "relation-list -r  $ID " )
+for tgt in $LIST; do
+    echo $tgt;
+    juju run --unit $UNIT "relation-get -r $ID - $tgt";
+done
