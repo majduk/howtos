@@ -2,9 +2,15 @@
 
 Collect all relation data:
 ```
-ID=$( juju run --unit keystone/leader relation-ids ha )
-LIST=$( juju run --unit keystone/leader "relation-list -r  $ID " ) 
-juju run --unit keystone/leader "relation-get -r ha:52 - hacluster-keystone/0" 
+UNIT=keystone/leader
+RELATION=ha
+ID=$( juju run --unit $UNIT relation-ids $RELATION )
+LIST=$( juju run --unit $UNIT "relation-list -r  $ID " ) 
+for tgt in $LIST; do
+    echo $tgt;
+    juju run --unit $UNIT "relation-get -r $ID - $tgt";
+done
+
 ```
 Relation data that was published by hacluster-keystone/0
 
