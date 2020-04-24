@@ -8,6 +8,11 @@ juju run --unit keystone/leader "relation-get -r ha:52 - hacluster-keystone/0"
 ```
 Relation data that was published by hacluster-keystone/0
 
+Using script:
+```
+./relation.sh  landscape-server/leader website
+```
+
 
 Dump database to yaml:
 ```
