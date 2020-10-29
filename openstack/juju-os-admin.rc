@@ -1,7 +1,7 @@
 # Unset any previous variables
 unset $(printenv | awk 'BEGIN{FS="=";} /^OS_/ {print $1;}')
 
-keystone_addr=$(juju config keystone vip)
+keystone_addr=$(juju config keystone vip | awk '{ print $1 }' )
 if [ -z "$keystone_addr" ]; then
   keystone_addr=$(juju run --unit keystone/0 unit-get private-address)
 fi
